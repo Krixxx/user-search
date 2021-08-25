@@ -6,25 +6,39 @@ const Repos = () => {
   const { repos } = React.useContext(GithubContext);
 
   let languages = repos.reduce((total, item) => {
-    const { language } = item;
+    const { language, stargazers_count } = item;
 
     if (!language) return total;
 
     if (!total[language]) {
-      total[language] = { label: language, value: 1 };
+      total[language] = { label: language, value: 1, stars: stargazers_count };
     } else {
       total[language] = {
         ...total[language],
         value: total[language].value + 1,
+        stars: total[language].stars + stargazers_count,
       };
     }
     return total;
   }, {});
 
   //create our list of objects and sort by higherst first. And then slice top 5 to our list.
-  languages = Object.values(languages)
+  // now we rename our languages to mostUsed and add stars also.
+  const mostUsed = Object.values(languages)
     .sort((a, b) => {
       return b.value - a.value;
+    })
+    .slice(0, 5);
+
+  //most stars per language
+
+  const mostPopular = Object.values(languages)
+    .sort((a, b) => {
+      return b.stars - a.stars;
+    })
+    .map((item) => {
+      //we iterate through our list and assign stars value to our value property. So charts can access this data.
+      return { ...item, value: item.stars };
     })
     .slice(0, 5);
 
@@ -46,7 +60,9 @@ const Repos = () => {
   return (
     <section className='section'>
       <Wrapper className='section-center'>
-        <Pie3D data={languages} />
+        <Pie3D data={mostUsed} />
+        <div></div>
+        <Doughnut2D data={mostPopular} />
         {/* <ExampleChart data={chartData} />; */}
       </Wrapper>
     </section>
