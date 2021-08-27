@@ -5,13 +5,14 @@ import { GithubContext } from '../context/context';
 const Search = () => {
   const [user, setUser] = React.useState('');
   //get things from global context
-  const { requests, error } = React.useContext(GithubContext);
+  const { requests, error, searchGithubUser } = React.useContext(GithubContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (user) {
       //more logic coming up soon
+      searchGithubUser(user);
       //optional
       // setUser('')
     }

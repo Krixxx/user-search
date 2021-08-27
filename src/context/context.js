@@ -20,6 +20,24 @@ const GithubProvider = ({ children }) => {
   //error
   const [error, setError] = useState({ show: false, msg: '' });
 
+  const searchGithubUser = async (user) => {
+    toggleError(); //first remove error msg, when starting to search.
+    setIsLoading(true);
+
+    const response = await axios(`${rootUrl}/users/${user}`).catch((err) =>
+      console.log(err)
+    );
+
+    if (response) {
+      //successful response
+      setGithubUser(response.data);
+      //more logic here
+    } else {
+      //unsuccessful response
+      toggleError(true, 'there is no user with that username');
+    }
+  };
+
   //check rate
   const checkRequests = () => {
     //all data we receive in axios, is already in json format, therefore we do not have to call .json()
@@ -48,7 +66,14 @@ const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ githubUser, repos, followers, requests, error }}
+      value={{
+        githubUser,
+        repos,
+        followers,
+        requests,
+        error,
+        searchGithubUser,
+      }}
     >
       {children}
     </GithubContext.Provider>
