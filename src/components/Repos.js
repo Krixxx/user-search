@@ -5,6 +5,7 @@ import { ExampleChart, Pie3D, Column3D, Bar3D, Doughnut2D } from './Charts';
 const Repos = () => {
   const { repos } = React.useContext(GithubContext);
 
+  // create a list of used languages and count their total amounts.
   let languages = repos.reduce((total, item) => {
     const { language, stargazers_count } = item;
 
@@ -42,7 +43,25 @@ const Repos = () => {
     })
     .slice(0, 5);
 
+  //stars, forks
+  let { stars, forks } = repos.reduce(
+    (total, item) => {
+      const { stargazers_count, name, forks } = item;
+
+      total.stars[stargazers_count] = { label: name, value: stargazers_count };
+
+      total.forks[forks] = { label: name, value: forks };
+
+      return total;
+    },
+    { stars: {}, forks: {} }
+  );
+
+  stars = Object.values(stars).slice(-5).reverse(); //this creates array of objects
+  forks = Object.values(forks).slice(-5).reverse(); //this creates array of objects
+
   // STEP 2 - Chart Data
+  /*
   const chartData = [
     {
       label: 'HTML',
@@ -57,13 +76,15 @@ const Repos = () => {
       value: '80',
     },
   ];
+  */
   return (
     <section className='section'>
       <Wrapper className='section-center'>
         <Pie3D data={mostUsed} />
-        <div></div>
+        <Column3D data={stars} />
         <Doughnut2D data={mostPopular} />
         {/* <ExampleChart data={chartData} />; */}
+        <Bar3D data={forks} />
       </Wrapper>
     </section>
   );
