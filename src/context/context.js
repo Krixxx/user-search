@@ -33,14 +33,6 @@ const GithubProvider = ({ children }) => {
       setGithubUser(response.data);
       const { login, followers_url } = response.data;
       //repos
-      /*
-        axios(`${rootUrl}/users/${login}/repos?per_page=100`).then((response) => setRepos(response.data))
-        .catch((error) => console.log(error));
-      //followers
-      
-        axios(`${followers_url}?per_page=100`).then((response) => setFollowers(response.data))
-        .catch((error) => console.log(error));
-*/
 
       //we use Promise.allSettled, to load all promises at the same time
       await Promise.allSettled([
